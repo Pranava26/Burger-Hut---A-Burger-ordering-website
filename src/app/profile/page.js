@@ -2,12 +2,14 @@
 import UserForm from "@/components/layout/UserForm";
 import UserTabs from "@/components/layout/UserTabs.js";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function ProfilePage() {
     const { data: session, status } = useSession();
+    const router = useRouter();
+
     const [isAdmin, setIsAdmin] = useState(false);
     const [user, setUser] = useState(null);
     const [profileFetched, setProfileFetched] = useState(false);
@@ -21,6 +23,8 @@ export default function ProfilePage() {
                     setProfileFetched(true);
                 })
             })
+        } else {
+            router.push('/login');
         }
     }, [session, status]);
 
@@ -37,11 +41,11 @@ export default function ProfilePage() {
     }
 
     if (status === 'loading' || !profileFetched) {
-        return 'Loading...';
+        return (
+            <p className="my-4 text-center">Loading...</p>
+        );
     }
-    if (status === 'unauthenticated') {
-        return redirect('/login');
-    }
+
     return (
         <section className="mt-8">
             <UserTabs isAdmin={isAdmin} />

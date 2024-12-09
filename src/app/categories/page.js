@@ -71,10 +71,14 @@ export default function Categories() {
     }
 
     if (profileLoading) {
-        return 'Loading user info...'
+        return (
+            <p className="my-4 text-center">'Loading user info...'</p>
+        )
     }
     if (!profileData.admin) {
-        return 'Not an admin';
+        return (
+            <p className="my-4 text-center">'Not an admin.'</p>
+        )
     }
     
     return (

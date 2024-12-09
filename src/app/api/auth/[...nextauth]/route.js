@@ -17,16 +17,23 @@ export const authOptions = {
         try {
           await connect();
           const user = await User.findOne({ email });
+
           if (!user) {
             throw new Error("User does not exist");
           }
+
+          if (!user.password) {
+            throw new Error("This account is linked with Google. Please log in using Google.");
+          }
+
           const passwordsMatch = await bcryptjs.compare(password, user.password);
           if (!passwordsMatch) {
             throw new Error("Invalid password");
           }
+
           return user;
         } catch (error) {
-          throw new Error(error.message);
+          throw new Error(error.message || "Authentication failed");
         }
       },
     }),

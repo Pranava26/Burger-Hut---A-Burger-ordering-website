@@ -41,11 +41,15 @@ export default function NewMenuItemPage() {
     }
 
     if (loading) {
-        return 'Loading user info...';
+        return (
+            <p className="my-4 text-center">'Loading user info...'</p>
+        )
     }
 
     if (!data.admin) {
-        return 'Not an admin.';
+        return (
+            <p className="my-4 text-center">'Not an admin.'</p>
+        )
     }
 
     return (

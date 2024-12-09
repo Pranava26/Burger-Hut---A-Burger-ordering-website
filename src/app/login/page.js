@@ -3,8 +3,12 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {signIn} from "next-auth/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+    const router = useRouter();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginInProgess, setLoginInProgress] = useState(false);
@@ -13,8 +17,21 @@ export default function LoginPage() {
         ev.preventDefault();
         setLoginInProgress(true);
 
-        await signIn('credentials', {email, password, callbackUrl: '/'});
-        setLoginInProgress(false);
+        try {
+            const res = await signIn('credentials', {redirect: false, email, password});
+            if(res?.ok){
+                router.push('/')
+            }
+
+            if(res?.error){
+                toast.error(res.error);
+            }
+        } catch (error) {
+            console.log('Error: ', error);
+            setLoginInProgress(false);
+        } finally {
+            setLoginInProgress(false);
+        }
     }
     return (
         <section className="mt-8">

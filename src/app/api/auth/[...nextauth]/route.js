@@ -18,16 +18,15 @@ export const authOptions = {
           await connect();
           const user = await User.findOne({ email });
           if (!user) {
-            return null;
+            throw new Error("User does not exist");
           }
           const passwordsMatch = await bcryptjs.compare(password, user.password);
           if (!passwordsMatch) {
-            return null;
+            throw new Error("Invalid password");
           }
           return user;
         } catch (error) {
-          console.log("Error:", error);
-          return null;
+          throw new Error(error.message);
         }
       },
     }),
